@@ -1,9 +1,13 @@
 using '../main.bicep'
 
-param workloadPrefix = 'sz'
-param workloadName = 'apim'
+param workloadPrefix = 'demo'
+param workloadName = 'cmh-apim'
 param environmentName = 'dev'
 param location = 'eastus'
+param apimPublisherEmail = 'xxx@yyzzyy.us'
+param apimPublisherName = 'Some One'
+param apimSkuName = 'Developer'
+param apimSkuCapacity = 1
 param serviceBusSku = 'Standard'
 param maxTopicSize = 2048
 param ordersTopicName = 'received-orders'

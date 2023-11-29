@@ -19,8 +19,8 @@ stages:
         vmImage: ubuntu-latest
       environment: ${{ parameters.environmentName }}
       variables:
-        infraTemplate: $(Pipeline.Workspace)/infrastructure/main.bicep
-        parameterFile: $(Pipeline.Workspace)/infrastructure/parameters/main.${{ parameters.environmentName }}.json
+        infraTemplate: $(Pipeline.Workspace)/infrastructure/bicep/main.bicep
+        parameterFile: $(Pipeline.Workspace)/infrastructure/bicep/parameters/main.${{ parameters.environmentName }}.json
         variableScriptFile: $(Pipeline.Workspace)/scripts/Set-PipelineVariablesFromDeploymentOutput.ps1
         functionPackage: $(Pipeline.Workspace)/functionapp/functionapp.zip
         setFunctionSecretScriptFile: $(Pipeline.Workspace)/scripts/set-function-key-secret.sh
