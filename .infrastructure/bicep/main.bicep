@@ -104,6 +104,7 @@ module apim './modules/apiManagement/apiManagementService.bicep' = {
     publisherName: apimPublisherName
     skuCapacity: apimSkuCapacity
     skuName: apimSkuName
+    enableSystemAssignedManagedIdentity: true
   }
 }
 
