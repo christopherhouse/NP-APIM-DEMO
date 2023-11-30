@@ -17,15 +17,43 @@ param(
     [Parameter(Mandatory)]
     [ValidateNotNullOrEmpty()]
     [string]
-    $AzDoRepositoryName
+    $AzDoRepositoryName,
+
+    [Parameter(Mandatory)]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    $DevResourceGroupName,
+
+    [Parameter(Mandatory)]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    $QAResourceGroupName,
+
+    [Parameter(Mandatory)]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    $DevOpsServiceConnectionName,
+
+    [Parameter(Mandatory)]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    $DevApiManagementServiceName,
+
+    [Parameter(Mandatory)]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    $QAApiManagementServiceName
 )
 
-$buildAndDeployPipelinePath = ".\.pipelines\build-and-deploy-order-fulfillment.yaml"
-$apiOpsExtractorPipelinePath = ".\.pipelines\run-extractor.yaml"
-$apiOpsPublisherPipelinePath = ".\.pipelines\run-publisher.yaml"
+$apiOpsReleaseVersion = "v4.10.3"
+
+$buildAndDeployPipelinePath = ".pipelines/build-and-deploy-order-fulfillment.yaml"
+$apiOpsExtractorPipelinePath = ".pipelines/run-extractor.yaml"
+$apiOpsPublisherPipelinePath = ".pipelines/run-publisher.yaml"
 $buildAndDeployPipelineName = "${PrefixString}-ApiOps-BuildAndDeploy"
 $extractorPipelineName = "${PrefixString}-ApiOps-Extractor"
 $publisherPipelineName = "${PrefixString}-ApiOps-Publisher"
+$variableGroupName = "${PrefixString}-apim-automation"
 
 # Use the command 'az pipelines create' to create a new YAML pipeline
 # in the DevOps org and project specified by the $AzDoOrgName and $AzDoProjectName
@@ -42,6 +70,7 @@ az pipelines create --name $buildAndDeployPipelineName `
                     --branch master `
                     --skip-first-run `
                     --yaml-path $buildAndDeployPipelinePath `
+                    --branch main `
                     -o table
 
 Write-Output "Creating pipeline $extractorPipelineName from $apiOpsExtractorPipelinePath"
@@ -53,6 +82,7 @@ az pipelines create --name $extractorPipelineName `
                     --branch master `
                     --skip-first-run `
                     --yaml-path $apiOpsExtractorPipelinePath `
+                    --branch main `
                     -o table
 
 Write-Output "Creating pipeline $publisherPipelineName from $apiOpsPublisherPipelinePath"
@@ -64,6 +94,12 @@ az pipelines create --name $publisherPipelineName `
                     --branch master `
                     --skip-first-run `
                     --yaml-path $apiOpsPublisherPipelinePath `
+                    --branch main `
                     -o table
 
+az pipelines variable-group create --name $variableGroupName `
+                                   --org $AzDoOrgName `
+                                   --project $AzDoProjectName `
+                                   --variables "PrefixString=$PrefixString" `
+                                   -o table
 
