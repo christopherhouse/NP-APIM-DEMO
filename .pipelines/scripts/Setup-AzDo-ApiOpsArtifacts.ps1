@@ -2,7 +2,6 @@
 param(
     [Parameter(Mandatory)]
     [ValidateNotNullOrEmpty]
-    [string]
     $PrefixString,
 
     [Parameter(Mandatory)]
@@ -25,7 +24,7 @@ $buildAndDeployPipelinePath = ".\.pipelines\build-and-deploy-order-fulfillment.y
 $apiOpsExtractorPipelinePath = ".\.pipelines\run-extractor.yaml"
 $apiOpsPublisherPipelinePath = ".\.pipelines\run-publisher.yaml"
 $buildAndDeployPipelineName = "${PrefixString}-ApiOps-BuildAndDeploy"
-$extractPipelineName = "${PrefixString}-ApiOps-Extractor"
+$extractorPipelineName = "${PrefixString}-ApiOps-Extractor"
 $publisherPipelineName = "${PrefixString}-ApiOps-Publisher"
 
 # Use the command 'az pipelines create' to create a new YAML pipeline
@@ -44,13 +43,24 @@ az pipelines create --name $buildAndDeployPipelineName `
                     --skip-first-run `
                     --yaml-path $buildAndDeployPipelinePath
 
-Write-Output "Creating pipeline $buildAndDeployPipelineName from $buildAndDeployPipelinePath"
-az pipelines create --name $buildAndDeployPipelineName `
+Write-Output "Creating pipeline $extractorPipelineName from $apiOpsExtractorPipelinePath"
+az pipelines create --name $extractorPipelineName `
                     --org $AzDoOrgName `
                     --project $AzDoProjectName `
                     --repository $AzDoRepositoryName `
                     --repository-type tfsgit `
                     --branch master `
                     --skip-first-run `
-                    --yaml-path $buildAndDeployPipelinePath
+                    --yaml-path $apiOpsExtractorPipelinePath
+
+Write-Output "Creating pipeline $publisherPipelineName from $apiOpsPublisherPipelinePath"
+az pipelines create --name $publisherPipelineName `
+                    --org $AzDoOrgName `
+                    --project $AzDoProjectName `
+                    --repository $AzDoRepositoryName `
+                    --repository-type tfsgit `
+                    --branch master `
+                    --skip-first-run `
+                    --yaml-path $apiOpsPublisherPipelinePath
+
 
