@@ -1,21 +1,21 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)]
-    [ValidateNotNullOrEmpty]
+    [ValidateNotNullOrEmpty()]
     $PrefixString,
 
     [Parameter(Mandatory)]
-    [ValidateNotNullOrEmpty]
+    [ValidateNotNullOrEmpty()]
     [string]
     $AzDoOrgName,
 
     [Parameter(Mandatory)]
-    [ValidateNotNullOrEmpty]
+    [ValidateNotNullOrEmpty()]
     [string ]
     $AzDoProjectName,
 
     [Parameter(Mandatory)]
-    [ValidateNotNullOrEmpty]
+    [ValidateNotNullOrEmpty()]
     [string]
     $AzDoRepositoryName
 )
@@ -41,7 +41,8 @@ az pipelines create --name $buildAndDeployPipelineName `
                     --repository-type tfsgit `
                     --branch master `
                     --skip-first-run `
-                    --yaml-path $buildAndDeployPipelinePath
+                    --yaml-path $buildAndDeployPipelinePath `
+                    -o table
 
 Write-Output "Creating pipeline $extractorPipelineName from $apiOpsExtractorPipelinePath"
 az pipelines create --name $extractorPipelineName `
@@ -51,7 +52,8 @@ az pipelines create --name $extractorPipelineName `
                     --repository-type tfsgit `
                     --branch master `
                     --skip-first-run `
-                    --yaml-path $apiOpsExtractorPipelinePath
+                    --yaml-path $apiOpsExtractorPipelinePath `
+                    -o table
 
 Write-Output "Creating pipeline $publisherPipelineName from $apiOpsPublisherPipelinePath"
 az pipelines create --name $publisherPipelineName `
@@ -61,6 +63,7 @@ az pipelines create --name $publisherPipelineName `
                     --repository-type tfsgit `
                     --branch master `
                     --skip-first-run `
-                    --yaml-path $apiOpsPublisherPipelinePath
+                    --yaml-path $apiOpsPublisherPipelinePath `
+                    -o table
 
 
