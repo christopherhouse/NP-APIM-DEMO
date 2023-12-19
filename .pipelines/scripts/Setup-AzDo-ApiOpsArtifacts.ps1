@@ -37,12 +37,7 @@ param(
     [Parameter(Mandatory)]
     [ValidateNotNullOrEmpty()]
     [string]
-    $DevApiManagementServiceName,
-
-    [Parameter(Mandatory)]
-    [ValidateNotNullOrEmpty()]
-    [string]
-    $QAApiManagementServiceName
+    $DevApiManagementServiceName
 )
 
 $apiOpsReleaseVersion = "v4.10.3"
@@ -100,6 +95,6 @@ az pipelines create --name $publisherPipelineName `
 az pipelines variable-group create --name $variableGroupName `
                                    --org $AzDoOrgName `
                                    --project $AzDoProjectName `
-                                   --variables "PrefixString=$PrefixString" `
+                                   --variables "APIM_NAME=$DevApiManagementServiceName apiops_release_version=$apiOpsReleaseVersion RESOURCE_GROUP_NAME=$DevResourceGroupName RESOURCE_GROUP_QA=$QAResourceGroup SEVICE_CONNECTION_NAME=$DevOpsServiceConnectionName" `
                                    -o table
 
