@@ -198,7 +198,7 @@ module kv './modules/keyVault/keyVault.bicep' = {
   }
 }
 
-module funcStorage './modules/storageAccount.bicep' = {
+module funcStorage './modules/storage/storageAccount.bicep' = {
   name: storageAccountDeploymentName
   params: {
     storageAccountName: storageAccountName
@@ -207,7 +207,7 @@ module funcStorage './modules/storageAccount.bicep' = {
   }
 }
 
-module funcUami './modules/userAssignedManagedIdentity.bicep' = {
+module funcUami './modules/managedIdentity/userAssignedManagedIdentity.bicep' = {
   name: functionAppUserAssignedIdentityDeploymentName
   params: {
     managedIdentityName: functionAppUserAssignedIdentityName
@@ -344,7 +344,7 @@ module statusSub './modules/serviceBus/serviceBusTopicSubscription.bicep' = {
   }
 }
 
-module alt './modules/azureLoadTesting.bicep' = {
+module alt './modules/azureLoadTesting/azureLoadTesting.bicep' = {
   name: loadTestingDeploymentName
   params: {
     loadTestsName: loadTestingName
