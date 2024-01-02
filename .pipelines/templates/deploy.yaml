@@ -97,4 +97,5 @@ stages:
                     --api-type http \
                     --specification-format OpenApi \
                     --specification-url $OPENAPI_URL \
-                    --api-version $API_VERSION
+                    --api-version $API_VERSION \
+                    --api-version-set-id $API_VERSION
