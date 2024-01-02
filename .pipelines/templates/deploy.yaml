@@ -96,5 +96,5 @@ stages:
                     --display-name "Product Ordering" \
                     --api-type http \
                     --specification-format OpenApi \
-                    --specification-url $(Pipeline.Workspace)/productordering/openapi.json \
+                    --specification-url $OPENAPI_URL \
                     --api-version $API_VERSION
