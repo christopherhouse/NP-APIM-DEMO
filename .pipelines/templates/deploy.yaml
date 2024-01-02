@@ -88,6 +88,14 @@ stages:
                 inlineScript: |
                   API_VERSION="2024-01-02"
                   OPENAPI_URL="https://$(functionAppHostName)/api/swagger.json"
+
+                  az apim api versionset create \
+                    --resource-group ${{ parameters.resourceGroupName }} \
+                    --service-name $(apimName) \
+                    --version-set-id productordering \
+                    --display-name "Product Ordering" \
+                    --versioning-scheme "Segment"
+
                   az apim api import \
                     --path /productordering \
                     --resource-group ${{ parameters.resourceGroupName }} \
@@ -98,4 +106,5 @@ stages:
                     --specification-format OpenApi \
                     --specification-url $OPENAPI_URL \
                     --api-version $API_VERSION \
-                    --api-version-set-id $API_VERSION
+                    --api-version-set-id "productordering"
+
