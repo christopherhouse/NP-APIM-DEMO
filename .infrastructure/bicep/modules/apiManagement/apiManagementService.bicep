@@ -25,3 +25,5 @@ resource apiManagementService 'Microsoft.ApiManagement/service@2023-03-01-previe
     publisherName: publisherName
   }
 }
+
+output name string = apiManagementService.name

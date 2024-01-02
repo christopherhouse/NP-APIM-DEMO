@@ -78,3 +78,23 @@ stages:
                 scriptType: bash
                 scriptLocation: scriptPath
                 arguments: ${{ parameters.resourceGroupName }} $(functionAppName) $(keyVaultName)
+            
+            - task: AzureCLI@2
+              displayName: Import Product Ordering OpenAPI Spec into APIM
+              inputs:
+                azureSubscription: ${{ parameters.serviceConnectionName }}
+                scriptType: bash
+                scriptLocation: inlineScript
+                inlineScript: |
+                  API_VERSION="2024-01-02"
+                  OPENAPI_URL="https://$(functionAppHostName)/api/swagger.json"
+                  az apim api import \
+                    --path /productordering \
+                    --resource-group ${{ parameters.resourceGroupName }} \
+                    --service-name $(apimName) \
+                    --api-id productordering \
+                    --display-name "Product Ordering" \
+                    --api-type http \
+                    --specification-format OpenApi \
+                    --specification-url $(Pipeline.Workspace)/productordering/openapi.json \
+                    --api-version $API_VERSION

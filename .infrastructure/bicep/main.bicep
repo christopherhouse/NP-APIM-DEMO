@@ -373,3 +373,5 @@ module sendApprovalAllMessages './modules/serviceBus/serviceBusTopicSubscription
 
 output functionAppName string = funcApp.outputs.name
 output keyVaultName string = kv.outputs.name
+output functionAppHostName string = funcApp.outputs.functionAppHostName
+output apimName string = apim.outputs.name
