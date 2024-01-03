@@ -10,7 +10,7 @@ param(
     $apiManagementName,
     [Parameter(Mandatory)]
     [ValidateNotNullOrEmpty()]
-    $functionAppUrl,
+    $functionAppHostName,
     [Parameter(Mandatory)]
     [ValidateNotNullOrEmpty()]
     $functionAppResourceId,
@@ -26,6 +26,7 @@ param(
 )
 
 $apiId = "productordering-$apiVersionIdentifier"
+$openApiSpec = "https://$functionAppHostName/api/swagger.json"
 
 # Setup the APIM context to point to the correct RG and service
 $apimContext = New-AzApiManagementContext -ResourceGroupName $resourceGroupName -ServiceName $apiManagementName
@@ -41,7 +42,7 @@ $versionSet = New-AzApiManagementApiVersionSet -Context $apimContext
 Import-AzApiManagementApi -Context $apimContext
                           -ApiId $apiId
                           -SpecificationFormat OpenApiJson
-                          -SpecificationUrl "$functionAppUrl/api/swagger.json"
+                          -SpecificationUrl $openApiSpec
                           -Path "productordering"
                           -Protocols @("https")
                           -ApiType Http
@@ -64,7 +65,7 @@ $backendCredentials = New-AzApiManagementBackendCredential -Header @{"x-function
 
 $backend = New-AzApiManagementBackend -Context $apimContext
                                       -BackendId "productordering-functions"
-                                      -Url "$functionAppUrl/api"
+                                      -Url "$functionAppHostName/api"
                                       -Protocol Http
                                       -Title "Product Ordering Function App Backend"
                                       -Description "Product Ordering Function App Backend"

@@ -12,14 +12,17 @@ $functionAppName = $outputObj.functionAppName.value
 $keyVaultName = $outputObj.keyVaultName.value
 $functionAppHostName = $outputObj.functionAppHostName.value
 $apimName = $outputObj.apimName.value
+$functionAppResourceId = $outputObj.functionAppResourceId.value
+$apimUserAssignedManagedIdentityClientId = $outputObj.apimUserAssignedManagedIdentityClientId.value
 
-# Set variable with Function app name from deployment output.  This will be used
-# as input for the Function deploy step
 Write-Output "##vso[task.setvariable variable=functionAppName;]$functionAppName"
 
-# Set variable for Key Vault name.  This is used in a script to update a kv secret
 Write-Output "##vso[task.setvariable variable=keyVaultName;]$keyVaultName"
 
 Write-Output "##vso[task.setvariable variable=functionAppHostName;]$functionAppHostName"
 
 Write-Output "##vso[task.setvariable variable=apimName;]$apimName"
+
+Write-Output "##vso[task.setvariable variable=functionAppResourceId;]$functionAppResourceId"
+
+Write-Output "##vso[task.setvariable variable=apimUserAssignedManagedIdentityClientId;]$apimUserAssignedManagedIdentityClientId"
