@@ -1,6 +1,6 @@
 using '../main.bicep'
 
-param workloadPrefix = 'demo'
+param workloadPrefix = 'qademo'
 param workloadName = 'cmh-apim'
 param environmentName = 'qa'
 param location = 'eastus'

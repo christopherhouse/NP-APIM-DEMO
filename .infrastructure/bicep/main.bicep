@@ -385,6 +385,6 @@ output functionAppName string = funcApp.outputs.name
 output keyVaultName string = kv.outputs.name
 output functionAppHostName string = funcApp.outputs.functionAppHostName
 output functionAppResourceId string = funcApp.outputs.id
-output functionAppKeyVaultSecretUri string = secrets.outputs.functionAppKeyUri
+output functionAppKeyKeyVaultSecretUri string = secrets.outputs.functionAppKeyUri
 output apimUserAssignedManagedIdentityClientId string = apimUami.outputs.clientId
 output apimName string = apim.outputs.name
