@@ -10,10 +10,29 @@ Write-Output "Deployment output is $armOutputString"
 $outputObj = $armOutputString | ConvertFrom-Json
 $functionAppName = $outputObj.functionAppName.value
 $keyVaultName = $outputObj.keyVaultName.value
+$functionAppHostName = $outputObj.functionAppHostName.value
+$apimName = $outputObj.apimName.value
+$functionAppResourceId = $outputObj.functionAppResourceId.value
+$apimUserAssignedManagedIdentityClientId = $outputObj.apimUserAssignedManagedIdentityClientId.value
+$functionAppKeyKeyVaultSecretUri = $outputObj.functionAppKeyKeyVaultSecretUri.value
 
-# Set variable with Function app name from deployment output.  This will be used
-# as input for the Function deploy step
+Write-Host "Setting variable for function app name"
 Write-Output "##vso[task.setvariable variable=functionAppName;]$functionAppName"
 
-# Set variable for Key Vault name.  This is used in a script to update a kv secret
+Write-Host "Setting variable for key vault name"
 Write-Output "##vso[task.setvariable variable=keyVaultName;]$keyVaultName"
+
+Write-Host "Setting variable for function app host name"
+Write-Output "##vso[task.setvariable variable=functionAppHostName;]$functionAppHostName"
+
+Write-Host "Setting variable for apim name"
+Write-Output "##vso[task.setvariable variable=apimName;]$apimName"
+
+Write-Host "Setting variable for function app resource id"
+Write-Output "##vso[task.setvariable variable=functionAppResourceId;]$functionAppResourceId"
+
+Write-Host "Setting variable for apim user assigned managed identity client id"
+Write-Output "##vso[task.setvariable variable=apimUserAssignedManagedIdentityClientId;]$apimUserAssignedManagedIdentityClientId"
+
+Write-Host "Setting variable for function app key key vault secret uri"
+Write-Output "##vso[task.setvariable variable=functionAppKeyKeyVaultSecretUri;]$functionAppKeyKeyVaultSecretUri"

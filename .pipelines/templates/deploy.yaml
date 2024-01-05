@@ -8,6 +8,9 @@ parameters:
 - name: deploymentRegion
   type: string
   default: 'eastus'
+- name: importApimApi
+  type: boolean
+  default: false
 
 stages:
   - stage: Deploy_to__${{ parameters.environmentName }}
@@ -24,6 +27,7 @@ stages:
         variableScriptFile: $(Pipeline.Workspace)/scripts/Set-PipelineVariablesFromDeploymentOutput.ps1
         functionPackage: $(Pipeline.Workspace)/functionapp/functionapp.zip
         setFunctionSecretScriptFile: $(Pipeline.Workspace)/scripts/set-function-key-secret.sh
+        importProductOrderingScriptFile: $(Pipeline.Workspace)/scripts/Import-ProductOrderingApi.ps1
       strategy:
         runOnce:
           deploy:
@@ -78,3 +82,41 @@ stages:
                 scriptType: bash
                 scriptLocation: scriptPath
                 arguments: ${{ parameters.resourceGroupName }} $(functionAppName) $(keyVaultName)
+            
+            - task: AzureCLI@2
+              displayName: Import Product Ordering OpenAPI Spec into APIM
+              condition: eq('${{ parameters.importApimApi }}', true)
+              inputs:
+                azureSubscription: ${{ parameters.serviceConnectionName }}
+                scriptType: pscore
+                scriptLocation: scriptPath
+                scriptPath: $(importProductOrderingScriptFile)
+                arguments: -resourceGroupName ${{ parameters.resourceGroupName }} -apiManagementName $(apimName) -functionAppHostName $(functionAppHostName) -functionAppResourceId $(functionAppResourceId) -apiVersionIdentifier "2024-01-03" -functionAppKeyKeyVaultSecretUri $(functionAppKeyKeyVaultSecretUri) -userAssignedManagedIdentityClientId $(apimUserAssignedManagedIdentityClientId)
+            # - task: AzureCLI@2
+            #   displayName: Import Product Ordering OpenAPI Spec into APIM
+            #   inputs:
+            #     azureSubscription: ${{ parameters.serviceConnectionName }}
+            #     scriptType: bash
+            #     scriptLocation: inlineScript
+            #     inlineScript: |
+            #       API_VERSION="2024-01-02"
+            #       OPENAPI_URL="https://$(functionAppHostName)/api/swagger.json"
+
+            #       az apim api versionset create \
+            #         --resource-group ${{ parameters.resourceGroupName }} \
+            #         --service-name $(apimName) \
+            #         --version-set-id productordering \
+            #         --display-name "Product Ordering" \
+            #         --versioning-scheme "Segment"
+
+            #       az apim api import \
+            #         --path /productordering \
+            #         --resource-group ${{ parameters.resourceGroupName }} \
+            #         --service-name $(apimName) \
+            #         --api-id productordering \
+            #         --display-name "Product Ordering" \
+            #         --api-type http \
+            #         --specification-format OpenApi \
+            #         --specification-url $OPENAPI_URL \
+            #         --api-version $API_VERSION \
+            #         --api-version-set-id "productordering"

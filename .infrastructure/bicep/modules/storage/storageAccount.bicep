@@ -13,6 +13,7 @@ resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   properties: {
     accessTier: 'Hot'
     supportsHttpsTrafficOnly: true
+    minimumTlsVersion: 'TLS1_2'
   }
 }
 

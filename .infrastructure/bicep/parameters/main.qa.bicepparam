@@ -1,13 +1,13 @@
 using '../main.bicep'
 
-param workloadPrefix = 'sz'
-param workloadName = 'apim'
+param workloadPrefix = 'qademo'
+param workloadName = 'cmh-apim'
 param environmentName = 'qa'
 param location = 'eastus'
 param apimSkuName = 'Developer'
 param apimSkuCapacity = 1
 param apimPublisherName = 'Publisher Name'
-param apimPublisherEmail = 'zzz@zzyyzz.com'
+param apimPublisherEmail = 'zzz@zzyyzz.com.us'
 param serviceBusSku = 'Standard'
 param maxTopicSize = 2048
 param ordersTopicName = 'received-orders'
@@ -29,4 +29,4 @@ param statusNotificationTopicSubscriptionName = 'all-status-notifications'
 param webHookNotificationUrl = 'https://webhook.site/cfa31dea-b33e-442f-b7d4-d52bcb8b4382/'
 param sendApprovalTopicName = 'send-credit-approval'
 param allCreditApprovalsSubscription = 'all-messages'
-param pipelineServicePrincipalId = 'ff83a1e5-b4c1-4be3-a6dc-199514812166'
+param pipelineServicePrincipalId = '90294e9c-ced6-4a8e-9424-934a7e58558e'

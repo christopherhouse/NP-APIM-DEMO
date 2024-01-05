@@ -62,6 +62,7 @@ var functionAppUserAssignedIdentityName = '${functionAppName}-uami'
 var cosmosDbAccountName = '${baseName}-cdb-acct'
 var loadTestingName = '${baseName}-alt'
 var apimName = '${baseName}-apim'
+var apimUserAssignedIdentityName = '${apimName}-uami'
 
 // Deployment Names
 var serviceBusDeploymentName = '${serviceBusNamespaceName}-${buildId}'
@@ -86,6 +87,7 @@ var loadTestingDeploymentName = '${loadTestingName}-${buildId}'
 var sendApprovalTopicDeploymentName = '${sendApprovalTopicName}-${buildId}'
 var allCreditApprovalsSubscriptionDeploymentName = '${allCreditApprovalsSubscription}-${buildId}'
 var apimDeploymentName = '${apimName}-${buildId}'
+var apimUserAssignedIdentityDeploymentName = '${apimUserAssignedIdentityName}-${buildId}'
 
 var tags = {
   BuildId: buildId
@@ -94,6 +96,14 @@ var tags = {
   LastDeploymentDate: deploymentDate
 }
 
+module apimUami './modules/managedIdentity/userAssignedManagedIdentity.bicep' = {
+  name: apimUserAssignedIdentityDeploymentName
+  params: {
+    managedIdentityName: apimUserAssignedIdentityName
+    location: location
+    tags: tags
+  }
+}
 module apim './modules/apiManagement/apiManagementService.bicep' = {
   name: apimDeploymentName
   params: {
@@ -104,7 +114,7 @@ module apim './modules/apiManagement/apiManagementService.bicep' = {
     publisherName: apimPublisherName
     skuCapacity: apimSkuCapacity
     skuName: apimSkuName
-    enableSystemAssignedManagedIdentity: true
+    userAssignedManagedIdentityResourceId: apimUami.outputs.id
   }
 }
 
@@ -192,13 +202,13 @@ module kv './modules/keyVault/keyVault.bicep' = {
     keyVaultName: keyVaultName
     location: location
     adminIdentities: keyVaultAdminIdentities
-    applicationIdentities: [ funcUami.outputs.principalId ]
+    applicationIdentities: [ funcUami.outputs.principalId, apimUami.outputs.principalId ]
     pipelineServicePrincipalId: pipelineServicePrincipalId
     tags: tags
   }
 }
 
-module funcStorage './modules/storageAccount.bicep' = {
+module funcStorage './modules/storage/storageAccount.bicep' = {
   name: storageAccountDeploymentName
   params: {
     storageAccountName: storageAccountName
@@ -207,7 +217,7 @@ module funcStorage './modules/storageAccount.bicep' = {
   }
 }
 
-module funcUami './modules/userAssignedManagedIdentity.bicep' = {
+module funcUami './modules/managedIdentity/userAssignedManagedIdentity.bicep' = {
   name: functionAppUserAssignedIdentityDeploymentName
   params: {
     managedIdentityName: functionAppUserAssignedIdentityName
@@ -344,7 +354,7 @@ module statusSub './modules/serviceBus/serviceBusTopicSubscription.bicep' = {
   }
 }
 
-module alt './modules/azureLoadTesting.bicep' = {
+module alt './modules/azureLoadTesting/azureLoadTesting.bicep' = {
   name: loadTestingDeploymentName
   params: {
     loadTestsName: loadTestingName
@@ -373,3 +383,8 @@ module sendApprovalAllMessages './modules/serviceBus/serviceBusTopicSubscription
 
 output functionAppName string = funcApp.outputs.name
 output keyVaultName string = kv.outputs.name
+output functionAppHostName string = funcApp.outputs.functionAppHostName
+output functionAppResourceId string = funcApp.outputs.id
+output functionAppKeyKeyVaultSecretUri string = secrets.outputs.functionAppKeyUri
+output apimUserAssignedManagedIdentityClientId string = apimUami.outputs.clientId
+output apimName string = apim.outputs.name
