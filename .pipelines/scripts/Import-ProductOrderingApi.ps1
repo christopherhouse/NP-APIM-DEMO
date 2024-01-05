@@ -25,6 +25,8 @@ param(
     $userAssignedManagedIdentityClientId
 )
 
+Install-Module Az.ApiManagement -Scope CurrentUser -Force
+
 $apiId = "productordering-$apiVersionIdentifier"
 $openApiSpec = "https://$functionAppHostName/api/swagger.json"
 
